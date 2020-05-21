@@ -11,6 +11,7 @@ using Domain.Exceptions;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Contexts.Users.Commands
 {
@@ -27,11 +28,13 @@ namespace Application.Contexts.Users.Commands
 
             private readonly IMainDbContext _mainDbContext;
             private readonly IMapper _mapper;
+            private readonly ILogger<CreateUserHandler> _logger;
             
-            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper)
+            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ILogger<CreateUserHandler> logger)
             {
                 _mainDbContext = mainDbContext;
                 _mapper = mapper;
+                _logger = logger;
             }
             
             public async Task<UserDto> Handle(CreateUser request, CancellationToken cancellationToken)
@@ -53,6 +56,8 @@ namespace Application.Contexts.Users.Commands
 
                 await _mainDbContext.Users.AddAsync(newUser, cancellationToken);
                 await _mainDbContext.SaveChangesAsync(cancellationToken);
+                
+                _logger.LogDebug($"Created user: {request.Email}");
                 return _mapper.Map<UserDto>(newUser);
             }
         }

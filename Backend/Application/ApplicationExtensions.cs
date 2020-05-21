@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using Application.AutoMapper;
+using Application.Middlewares;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,6 +31,11 @@ namespace Application
         private static void ConfigureSecurity(IServiceCollection services, IConfiguration configuration)
         {
             
+        }
+
+        public static void UseApplication(this IApplicationBuilder app)
+        {
+            app.UseMiddleware(typeof(ErrorMiddleware));
         }
     }
 }

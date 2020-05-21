@@ -27,8 +27,9 @@ namespace API
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
-            services.AddDomain();
+            
             services.AddApplication(_configuration);
+            services.AddDomain();
             services.AddPersistence(_configuration);
             services.AddMediatR(Assembly.GetExecutingAssembly());
         }
@@ -48,11 +49,9 @@ namespace API
                 options.AllowAnyOrigin();
             });
             app.UseHttpsRedirection();
-
+            app.UseApplication();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

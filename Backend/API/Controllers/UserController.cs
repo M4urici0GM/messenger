@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Contexts.Users.Commands;
@@ -20,41 +21,18 @@ namespace API.Controllers
             _mediator = mediator;
         }
         
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserInfo request)
         {
-            return Ok(new
-            {
-                message = "Hello World"
-            });
+            UserDto user = await _mediator.Send(request);
+            return Ok(user);
         }
-
+        
         [HttpPut]
         public async Task<IActionResult> CreateUser([FromBody]CreateUser request)
         {
-            try
-            {
-                UserDto newUser = await _mediator.Send(request);
-                return Ok(new
-                {
-                    user = newUser
-                });
-            }
-            catch (EntityValidationException e)
-            {
-                return BadRequest(new
-                {
-                    errors = e.Failures,
-                    message = "One or more fields are invalid."
-                });
-            }
-            catch (EntityAlreadyExists e)
-            {
-                return Conflict(new
-                {
-                    message = e.Message
-                });
-            }
+            UserDto user = await _mediator.Send(request);
+            return Ok(user);
         }
     }
 }

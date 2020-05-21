@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using API;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -9,15 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Persistence.Contexts;
 
-namespace Tests
+namespace IntegrationTests
 {
-    public abstract class BaseClass
+    public class IntegrationTests
     {
-        protected readonly HttpClient _httpClient;
+        protected readonly HttpClient testClient;
 
-        public BaseClass()
+        public IntegrationTests()
         {
-            WebApplicationFactory<Startup> applicationFactory = new WebApplicationFactory<Startup>()
+            var appFactory = new WebApplicationFactory<Startup>()
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureServices(services =>
@@ -37,15 +36,8 @@ namespace Tests
                         });
                     });
                 });
-            _httpClient = applicationFactory.CreateClient();
-        }
 
-        public async Task AuthenticateAsync()
-        {}
-
-        public async Task<string> GetJwtAsync()
-        {
-            return "";
+            testClient = appFactory.CreateClient();
         }
     }
 }
