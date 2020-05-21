@@ -20,18 +20,36 @@ namespace Tests
     [TestClass]
     public class Users : BaseClass
     {
+        private CreateUser validUserRequest = new CreateUser()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test@test.com",
+            Password = "testPassword#123"
+        };
+        
+        private CreateUser userWithInvalidPassword = new CreateUser()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test@test.com",
+            Password = "testPassword123"
+        };
+        
+        private CreateUser userWithInvalidEmail = new CreateUser()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test@test",
+            Password = "testPassword#123"
+        };
+        
+        
         [TestMethod]
         public async Task CreateUserSuccessful()
         {
-            CreateUser createUserRequest = new CreateUser()
-            {
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@test.com",
-                Password = "testPassword#123"
-            };
             var content = new StringContent(
-                JsonConvert.SerializeObject(createUserRequest), 
+                JsonConvert.SerializeObject(validUserRequest), 
                 Encoding.UTF8, "application/json");
             
             var response = await _httpClient.PutAsync("api/user", content);
@@ -41,15 +59,8 @@ namespace Tests
         [TestMethod]
         public async Task CreateUserWithInvalidPasswordShouldReturnBadReques()
         {
-            CreateUser createUserRequest = new CreateUser()
-            {
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@test.com",
-                Password = "testPassword123"
-            };
             var content = new StringContent(
-                JsonConvert.SerializeObject(createUserRequest), 
+                JsonConvert.SerializeObject(userWithInvalidPassword), 
                 Encoding.UTF8, "application/json");
             
             var response = await _httpClient.PutAsync("api/user", content);
@@ -59,15 +70,8 @@ namespace Tests
         [TestMethod]
         public async Task CreateUserWithInvalidEmailShouldReturnBadRequest()
         {
-            CreateUser createUserRequest = new CreateUser()
-            {
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@test",
-                Password = "testPassword#123"
-            };
             var content = new StringContent(
-                JsonConvert.SerializeObject(createUserRequest), 
+                JsonConvert.SerializeObject(userWithInvalidEmail), 
                 Encoding.UTF8, "application/json");
             
             var response = await _httpClient.PutAsync("api/user", content);

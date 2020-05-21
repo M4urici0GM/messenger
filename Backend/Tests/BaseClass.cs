@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using API;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -37,6 +38,14 @@ namespace Tests
                     });
                 });
             _httpClient = applicationFactory.CreateClient();
+        }
+
+        public async Task AuthenticateAsync()
+        {}
+
+        public async Task<string> GetJwtAsync()
+        {
+            return "";
         }
     }
 }
