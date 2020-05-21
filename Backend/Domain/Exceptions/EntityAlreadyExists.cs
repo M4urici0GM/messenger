@@ -8,7 +8,7 @@ namespace Application.Common.Exceptions
     {
 
         public EntityAlreadyExists(string name, object key)
-            :base($"Entity \"{name}\" ({key}) already exists")
+            :base($"Entity {name} ({key}) already exists")
         { }
     }
 }

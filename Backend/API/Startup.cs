@@ -22,7 +22,11 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
             services.AddDomain();
             services.AddApplication(_configuration);
             services.AddPersistence(_configuration);
@@ -36,6 +40,13 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHsts();
+            app.UseCors(options =>
+            {
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowAnyOrigin();
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();

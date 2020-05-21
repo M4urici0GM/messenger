@@ -11,6 +11,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="9.0.0" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="8.6.2" />
       <PackageReference Include="MediatR" Version="8.0.1" />
