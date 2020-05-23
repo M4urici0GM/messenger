@@ -35,11 +35,11 @@ namespace API.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateUser request)
         {
             AuthenticatedUserDto authenticatedUser = await _mediator.Send(request);
-            return Ok();
+            return Ok(authenticatedUser);
         }
     }
 }

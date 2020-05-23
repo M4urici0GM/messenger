@@ -1,5 +1,6 @@
 ﻿using System;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
 {

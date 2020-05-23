@@ -178,7 +178,56 @@ namespace IntegrationTests.Controllers
                 // Assert
                 updateUserResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
+        }
+
+        [Fact]
+        public async Task Authenticate_WithValidUser_ReturnsOk()
+        {
+            // Arrange
+            CreateUser user = new CreateUser()
+            {
+                FirstName = "Test",
+                LastName = "User",
+                Email = "webTokenTest@email.com",
+                Password = "testPassword#123"
+            };
+            UpdateUserInfo updateUserInfo = new UpdateUserInfo();
             
+            var requestContent = new StringContent(
+                JsonConvert.SerializeObject(user),
+                Encoding.UTF8, "application/json");
+
+            // Act
+            HttpResponseMessage createUserResponse = await _client.PutAsync("api/user", requestContent);
+            
+            string createdUserSerialized = await createUserResponse.Content.ReadAsStringAsync();
+            User createdUser = JsonConvert.DeserializeObject<User>(createdUserSerialized);
+
+            createUserResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            createdUser.Id.Should().NotBe(Guid.Empty);
+            
+            
+            AuthenticateUser authenticateUser = new AuthenticateUser
+            {
+                Email = "webTokenTest@email.com",
+                Password = "testPassword#123"
+            };
+            
+            var authRequestContent = new StringContent(
+                JsonConvert.SerializeObject(authenticateUser),
+                Encoding.UTF8, "application/json");
+            HttpResponseMessage authenticateResponse = await _client.PostAsync("api/user/authenticate", authRequestContent);
+            
+            authenticateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            string authenticatedUserSerialized = await authenticateResponse.Content.ReadAsStringAsync();
+            AuthenticatedUserDto authenticatedUserDto = JsonConvert.DeserializeObject<AuthenticatedUserDto>(authenticatedUserSerialized);
+
+            authenticatedUserDto.User.Should().NotBe(null);
+            authenticatedUserDto.User.Id.Should().NotBe(Guid.Empty);
+            authenticatedUserDto.WebToken.Token.Should().NotBe(string.Empty);
+            authenticatedUserDto.WebToken.Token.Should().NotBe(null);
+
         }
     }
 }
