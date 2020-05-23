@@ -34,5 +34,12 @@ namespace API.Controllers
             UserDto user = await _mediator.Send(request);
             return Ok(user);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Authenticate()
+        {
+            AuthenticatedUserDto authenticatedUser = await _mediator.Send(new);
+            return Ok();
+        }
     }
 }
