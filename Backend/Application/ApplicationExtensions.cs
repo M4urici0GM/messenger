@@ -58,6 +58,8 @@ namespace Application
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidAudience = tokenConfiguration.Audience,
+                    ValidIssuer = tokenConfiguration.Issuer,
                     ValidateAudience =  true,
                     ValidateIssuer = true,
                     ClockSkew = TimeSpan.Zero,

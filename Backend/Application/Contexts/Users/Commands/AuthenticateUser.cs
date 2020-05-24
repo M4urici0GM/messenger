@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Contexts.Authentication.Commands;
 using Application.Contexts.Users.Validators;
 using Application.DataTransferObjects;
 using Application.Interfaces;
@@ -25,24 +26,28 @@ namespace Application.Contexts.Users.Commands
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        
+
         public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, AuthenticatedUserDto>
         {
-
             private readonly IMainDbContext _mainDbContext;
             private readonly IMapper _mapper;
+            private readonly IMediator _mediator;
             private readonly ITokenConfiguration _tokenConfiguration;
             private readonly ISignInConfiguration _signInConfiguration;
-            
-            public AuthenticateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ITokenConfiguration tokenConfiguration, ISignInConfiguration signInConfiguration)
+
+            public AuthenticateUserHandler(IMainDbContext mainDbContext, IMapper mapper,
+                ITokenConfiguration tokenConfiguration, ISignInConfiguration signInConfiguration,
+                IMediator mediator)
             {
                 _mainDbContext = mainDbContext;
                 _mapper = mapper;
                 _tokenConfiguration = tokenConfiguration;
                 _signInConfiguration = signInConfiguration;
+                _mediator = mediator;
             }
-            
-            public async Task<AuthenticatedUserDto> Handle(AuthenticateUser request, CancellationToken cancellationToken)
+
+            public async Task<AuthenticatedUserDto> Handle(AuthenticateUser request,
+                CancellationToken cancellationToken)
             {
                 AuthenticateUserValidator validator = new AuthenticateUserValidator();
                 ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -51,7 +56,7 @@ namespace Application.Contexts.Users.Commands
 
                 User user = await _mainDbContext.Users
                     .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
-                
+
                 if (user.Equals(null))
                     throw new InvalidCredentialException();
 
@@ -61,32 +66,12 @@ namespace Application.Contexts.Users.Commands
                 if (!isPasswordValid)
                     throw new InvalidCredentialException();
 
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
-                ClaimsIdentity identity = new ClaimsIdentity(claims);
-                JsonWebTokenHandler tokenHandler = new JsonWebTokenHandler();
+                WebToken webToken = await _mediator.Send(new GenerateToken(), cancellationToken);
 
-                DateTime expirationDate = new DateTime().AddSeconds(_tokenConfiguration.ExpiresIn);
-                
-                SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Audience = _tokenConfiguration.Audience,
-                    Issuer = _tokenConfiguration.Issuer,
-                    Expires = expirationDate,
-                    Subject = identity,
-                    SigningCredentials = _signInConfiguration.SigningCredentials,
-                    CompressionAlgorithm = CompressionAlgorithms.Deflate,
-                };
-                
                 return new AuthenticatedUserDto
                 {
                     User = _mapper.Map<UserDto>(user),
-                    WebToken = new WebToken
-                    {
-                        CreatedAt = DateTime.Now,
-                        ExpirationDate = expirationDate,
-                        Token = tokenHandler.CreateToken(tokenDescriptor),
-                    }
+                    WebToken = webToken
                 };
             }
         }
