@@ -65,6 +65,14 @@ namespace Application
                     ClockSkew = TimeSpan.Zero,
                 };
             });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build());
+            });
         }
 
         public static void UseApplication(this IApplicationBuilder app)

@@ -6,6 +6,7 @@ using Application.Contexts.Users.Commands;
 using Application.DataTransferObjects;
 using Domain.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -21,7 +22,7 @@ namespace API.Controllers
             _mediator = mediator;
         }
         
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserInfo request)
         {
             UserDto user = await _mediator.Send(request);

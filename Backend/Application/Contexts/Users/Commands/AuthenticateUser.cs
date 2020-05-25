@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -55,7 +56,9 @@ namespace Application.Contexts.Users.Commands
                     throw new EntityValidationException(nameof(AuthenticateUser), request, validationResult.Errors);
 
                 User user = await _mainDbContext.Users
-                    .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+                    .AsNoTracking()
+                    .Where(u => u.Email == request.Email && !u.IsDeleted)
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (user.Equals(null))
                     throw new InvalidCredentialException();
@@ -71,7 +74,7 @@ namespace Application.Contexts.Users.Commands
                 return new AuthenticatedUserDto
                 {
                     User = _mapper.Map<UserDto>(user),
-                    WebToken = webToken
+                    WebToken = webToken,
                 };
             }
         }

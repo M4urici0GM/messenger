@@ -46,7 +46,8 @@ namespace Application.Contexts.Users.Commands
 
                 User currentUser = await _mainDbContext.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+                    .Where(u => u.Email == request.Email && !u.IsDeleted)
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (currentUser != null)
                     throw new EntityAlreadyExists(nameof(User), request.Email);

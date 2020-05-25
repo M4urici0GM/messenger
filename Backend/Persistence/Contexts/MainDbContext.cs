@@ -13,13 +13,18 @@ namespace Persistence.Contexts
     public class MainDbContext : DbContext, IMainDbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<UserMessage> UserMessages { get; set; }
+        public DbSet<Message> Messages { get; set; }
         
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new MessageConfiguration());
+            modelBuilder.ApplyConfiguration(new UserMessageConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -65,6 +65,7 @@ namespace Application.Contexts.Authentication.Commands
                     Token = _tokenHandler.WriteToken(securityToken),
                     CreatedAt = DateTime.Now,
                     ExpirationDate = expirationDate,
+                    RefreshToken = Guid.NewGuid().ToString("N")
                 };
             }
         }
