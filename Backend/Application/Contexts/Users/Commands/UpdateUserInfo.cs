@@ -21,6 +21,7 @@ namespace Application.Contexts.Users.Commands
         public string LastName { get; set; }
         public string NewPassword { get; set; }
         public string CurrentPassword { get; set; }
+        
 
         public class UpdateUserHandler : IRequestHandler<UpdateUserInfo, UserDto>
         {

@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,6 +23,11 @@ namespace Application
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddWebSockets(options =>
+            {
+                options.ReceiveBufferSize = 4096;
+                options.KeepAliveInterval = TimeSpan.FromMinutes(2);
+            });
             ConfigureSecurity(services, configuration);
             ConfigureAutoMapper(services);
         }
@@ -77,7 +83,9 @@ namespace Application
 
         public static void UseApplication(this IApplicationBuilder app)
         {
+            app.UseWebSockets();
             app.UseMiddleware(typeof(ErrorMiddleware));
+            app.UseMiddleware(typeof(WebSocketsMiddleware));
         }
     }
 }
