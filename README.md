@@ -38,23 +38,19 @@
 - [Typescript](https://www.typescriptlang.org/)
 - [Redis](https://redis.io/)
 
----
-
 ## :fire: Contribute
 
 You can fork, help implement things, and create PR's.
 Since the app have no name yet, why not start by helping get it a name? :sweat_smile:
 
----
-
 ## :octocat: Project Description
 
 Still Writing it.
-
----
 
 ## :page_with_curl: License
 
 That project is under MIT License, check the [LICENSE](LICENSE.md) file to read more.
 
 ---
+
+Done with :heart:
