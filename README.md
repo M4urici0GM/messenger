@@ -24,26 +24,19 @@
 
 <br>
 
+## :camera: Screenshots
 <p align="center">
-    <div>
-        <h4>Login screen</h4>
-        <img alt="Login screen" src=".github/LoginScreen.png" width="100%">
-    </div>
-    <div>
-        <h4>Register screen</h4>
-        <img alt="App screenshots" src=".github/RegisterScreen.png" width="100%">
-    </div>
+    <image src=".github/screenshots1.png">
 </p>
 
 ## :computer: Used Technologies
 
-<div align="center" style="display: flex; flex-wrap: wrap; justify-content: space-around; align-content: center">
-<img alt=".netCore" src=".github/netCoreLogo.png">
-<img alt="React" src=".github/reactLogo.png">
-<img alt="React" src=".github/dockerLogo.png">
-<img alt="React" src=".github/sqlServerLogo.png">
-<img alt="React" src=".github/typescriptLogo.png">
-</div>
+- [.NET Core](https://dotnet.microsoft.com/)
+- [React](https://reactjs.org/)
+- [Docker](https://docker.com)
+- [SqlServer](https://www.microsoft.com/en-US/sql-server/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Redis](https://redis.io/)
 
 ---
 
