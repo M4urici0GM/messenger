@@ -12,13 +12,17 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.5",
     "@types/redux-thunk": "^2.1.0",
+    "@types/styled-components": "^5.1.0",
     "axios": "^0.19.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
+    "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-toastify": "^6.0.5",
     "react-undraw": "^1.14.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
@@ -26,10 +30,11 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start && react-undraw-cli",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "react-undraw-cli && react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

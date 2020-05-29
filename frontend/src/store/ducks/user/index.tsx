@@ -1,11 +1,11 @@
-import { action } from 'typesafe-actions';
 import { IUserState, UserTypes } from './types';
+import { Action } from 'redux';
 
 
 const initialState: IUserState = {
     error: false,
     loading: false,
-    authenticated: false,
+    authenticated: true,
     user: {
         id: '',
         firstName: '',
@@ -15,9 +15,8 @@ const initialState: IUserState = {
 };
 
 
-
-export const reducer = (state = initialState, action) => {
+export const userReducer = (state: IUserState = initialState, action: Action<UserTypes>) => {
     switch(action.type) {
-
+        default: return state;
     }
 };
