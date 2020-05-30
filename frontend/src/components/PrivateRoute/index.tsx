@@ -3,7 +3,7 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { IUserState } from '../../store/ducks/user/types'
-import { ApplicationState } from '../../store';
+import { GlobalState } from '../../store';
 
 interface StateProps {
     userState: IUserState
@@ -40,8 +40,8 @@ const PrivateRoute: React.FC<Props> = (props) => {
     );
 };
 
-const mapStateToProps = (state: ApplicationState): StateProps  => ({
-    userState: state.userState,
+const mapStateToProps = (state: GlobalState): StateProps  => ({
+    userState: state.user,
 });
 
 export default connect(mapStateToProps)(PrivateRoute);

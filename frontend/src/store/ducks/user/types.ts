@@ -13,8 +13,8 @@ export interface IUser {
     email: string,
 }
 
-export interface UserTypes {
-    LOAD_REQUEST: '@users/LOAD_REQUEST',
-    LOAD_SUCCESS: '@users/LOAD_SUCCESS',
-    LOAD_FAILURE: '@users/LOAD_FAILURE',
+export enum IUserTypes {
+    LOAD_REQUEST = '@users/LOAD_REQUEST',
+    LOAD_SUCCESS = '@users/LOAD_SUCCESS',
+    LOAD_FAILURE = '@users/LOAD_FAILURE',
 }

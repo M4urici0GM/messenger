@@ -27,14 +27,15 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.1",
+    "typesafe-actions": "^5.1.0",
     "typescript": "~3.7.2"
   },
   "scripts": {
     "start": "react-scripts start && react-undraw-cli",
-    "build": "react-scripts build",
+    "build": "react-scripts build && react-undraw-cli",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "react-undraw-cli && react-scripts build"
+    "prebuild": "react-undraw-cli"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-root-import": "^6.5.0"
   }
 }
