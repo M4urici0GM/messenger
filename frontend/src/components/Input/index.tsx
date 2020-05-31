@@ -5,42 +5,57 @@ import {
     StyledInputLabel,
     InputContainer,
     IconContainer,
+    Icon,
 } from './styles';
 
 interface InputProps {
-    onChange(): void
     fullWidth?: boolean
     type?: string
+    width?: number
+    placeholder?: string
     label?: string
     icon?: React.ReactNode
+    iconColor?: string
+    onBlur?(): void
+    onFocus?(): void
+    onChange?(): void
 }
 
 const Input: React.FC<InputProps> = (props) => {
     return (
-        <InputContainer>
+        <InputContainer
+            fullWidth={props.fullWidth}
+            width={props.width}
+        >
             {props.label && (
                     <StyledInputLabel>
                         {props.label}
                     </StyledInputLabel>
                 )
             }
-            <StyledInput
-                type={props.type}
-                onChange={props.onChange}
-                fullWidth={props.fullWidth}
-            />
-            {props.icon && (
-                <IconContainer>
-                    {props.icon}
-                </IconContainer>
-            )}
+            <IconContainer>
+                <StyledInput
+                    type={props.type}
+                    onChange={props.onChange}
+                    placeholder={props.placeholder}
+                />               
+                {props.icon && (
+                    <Icon>
+                        {props.icon}
+                    </Icon>
+                )}
+            </IconContainer>
         </InputContainer>
     );
 };
 
 Input.defaultProps = {
-    fullWidth: false,
+    fullWidth: true,
     type: 'text',
+    placeholder: '',
+    onBlur: () => {},
+    onFocus: () => {},
+    onChange: () => {},
 };
 
 export default Input;
