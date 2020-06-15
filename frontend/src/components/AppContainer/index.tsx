@@ -1,20 +1,30 @@
 import React from 'react';
 
 import {
-    Container,
     BackgroundContainer,
+    WhiteContainer,
+    ContentContainer
 } from './styles';
+import { Column } from '../Grid';
+import LoadingOverlay from '../LoadingOverlay';
 
 interface Props {
     children: React.ReactNode
+    loading: boolean
 }
 
 const AppContainer: React.FC<Props> = (props) => {
+    console.log('a');
     return (
         <BackgroundContainer>
-            <Container>
-                {props.children}
-            </Container>
+            <LoadingOverlay loading={props.loading} />
+            <WhiteContainer>
+                <ContentContainer>
+                    <Column>
+                        {props.children}
+                    </Column>
+                </ContentContainer>
+            </WhiteContainer>
         </BackgroundContainer>
     );
 };

@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 interface StateProps {
   currentTheme: Theme
+  loading: boolean
 };
 
 interface OwnProps {
@@ -26,7 +27,7 @@ type Props = StateProps & OwnProps;
 
 const App: FC<Props> = (props) => (
   <ThemeProvider theme={props.currentTheme}>
-    <AppContainer>
+    <AppContainer loading={props.loading}>
       <ToastContainer />
       <Router />
     </AppContainer>
@@ -36,6 +37,7 @@ const App: FC<Props> = (props) => (
 
 const mapStateToProps = (state: GlobalState) => ({
   currentTheme: state.app.themeMode,
+  loading: state.app.loading,
 })
 
 export default connect(mapStateToProps)(App);

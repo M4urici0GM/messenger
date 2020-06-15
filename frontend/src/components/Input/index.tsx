@@ -16,6 +16,7 @@ interface InputProps {
     label?: string
     icon?: React.ReactNode
     iconColor?: string
+    style?: any
     onBlur?(): void
     onFocus?(): void
     onChange?(): void
@@ -26,6 +27,7 @@ const Input: React.FC<InputProps> = (props) => {
         <InputContainer
             fullWidth={props.fullWidth}
             width={props.width}
+            style={props.style}
         >
             {props.label && (
                     <StyledInputLabel>
@@ -53,6 +55,7 @@ Input.defaultProps = {
     fullWidth: true,
     type: 'text',
     placeholder: '',
+    style: {},
     onBlur: () => {},
     onFocus: () => {},
     onChange: () => {},

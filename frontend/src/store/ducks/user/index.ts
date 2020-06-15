@@ -5,7 +5,7 @@ import { IUserState, IUserTypes } from './types';
 const INITIAL_STATE: IUserState = {
     error: false,
     loading: false,
-    authenticated: true,
+    authenticated: false,
     user: {
         id: '',
         firstName: '',

@@ -31,5 +31,6 @@ export interface IAppState {
  */
 export enum AppTypes {
     TOGGLE_THEME = '@app/TOGGLE_THEME',
+    TOGGLE_LOADING_STATUS = '@app/TOGGLE_LOADING_STATUS'
 }
 

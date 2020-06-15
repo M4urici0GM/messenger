@@ -23,3 +23,48 @@ body {
   width: 100%;
   height: 100%;
 }
+
+.component-transition-appear {
+  opacity: 0;
+}
+
+.component-transition-appear-active {
+  opacity: 1;
+  transition: opacity 350ms;
+}
+
+.component-transition-appear-done {
+  opacity: 1;
+}
+
+
+.component-transition-exit {
+  opacity: 0;
+}
+
+.component-transition-exit-active {
+  opacity: 0;
+  transition: opacity 1000ms;
+}
+
+.component-transition-exit-done {
+  opacity: 0;
+}
+
+.Toastify__toast {
+  border-radius: 10px !important;
+} 
+
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+} 
+
+.Toastify__toast--info {
+  background-color: #17a2b8 !important;
+}
+.Toastify__toast--success {
+  background-color: #28a745 !important;
+}
+.Toastify__toast--warning {
+  background-color: #ffc107 !important;
+}

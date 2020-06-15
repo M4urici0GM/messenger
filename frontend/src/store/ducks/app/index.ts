@@ -21,6 +21,11 @@ const INITIAL_STATE: IAppState = {
 
 const appReducer: Reducer<IAppState> = (state = INITIAL_STATE, action) => {
     switch(action.type) {
+        case AppTypes.TOGGLE_LOADING_STATUS:
+            return {
+                ...state,
+                loading: !state.loading,
+            }
         default: return state;
     }
 };
