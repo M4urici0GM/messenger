@@ -1,13 +1,70 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  width: 100%;
+  height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  font-family: 'Nunito' !important;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.component-transition-appear {
+  opacity: 0;
+}
+
+.component-transition-appear-active {
+  opacity: 1;
+  transition: opacity 350ms;
+}
+
+.component-transition-appear-done {
+  opacity: 1;
+}
+
+
+.component-transition-exit {
+  opacity: 0;
+}
+
+.component-transition-exit-active {
+  opacity: 0;
+  transition: opacity 1000ms;
+}
+
+.component-transition-exit-done {
+  opacity: 0;
+}
+
+.Toastify__toast {
+  border-radius: 10px !important;
+} 
+
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+} 
+
+.Toastify__toast--info {
+  background-color: #17a2b8 !important;
+}
+.Toastify__toast--success {
+  background-color: #28a745 !important;
+}
+.Toastify__toast--warning {
+  background-color: #ffc107 !important;
 }
