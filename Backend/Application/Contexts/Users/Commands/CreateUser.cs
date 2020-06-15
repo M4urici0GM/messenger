@@ -25,18 +25,19 @@ namespace Application.Contexts.Users.Commands
 
         public class CreateUserHandler : IRequestHandler<CreateUser, UserDto>
         {
-
             private readonly IMainDbContext _mainDbContext;
             private readonly IMapper _mapper;
             private readonly ILogger<CreateUserHandler> _logger;
-            
-            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ILogger<CreateUserHandler> logger)
+            private readonly IMediator _mediator;
+
+            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ILogger<CreateUserHandler> logger, IMediator mediator)
             {
                 _mainDbContext = mainDbContext;
                 _mapper = mapper;
+                _mediator = mediator;
                 _logger = logger;
             }
-            
+
             public async Task<UserDto> Handle(CreateUser request, CancellationToken cancellationToken)
             {
                 CreateUserValidator validator = new CreateUserValidator();
@@ -51,13 +52,13 @@ namespace Application.Contexts.Users.Commands
 
                 if (currentUser != null)
                     throw new EntityAlreadyExists(nameof(User), request.Email);
-                
+
                 User newUser = _mapper.Map<User>(request);
                 newUser.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
                 await _mainDbContext.Users.AddAsync(newUser, cancellationToken);
                 await _mainDbContext.SaveChangesAsync(cancellationToken);
-                
+
                 _logger.LogDebug($"Created user: {request.Email}");
                 return _mapper.Map<UserDto>(newUser);
             }

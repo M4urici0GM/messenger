@@ -21,6 +21,10 @@ namespace Persistence.Configurations
                 .HasDefaultValue(false)
                 .IsRequired();
 
+            builder.Property(p => p.IsVerified)
+                .HasDefaultValue(false)
+                .IsRequired();
+
             builder
                 .HasMany(p => p.ReceivedMessages)
                 .WithOne(p => p.From)

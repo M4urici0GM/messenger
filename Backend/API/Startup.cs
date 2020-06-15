@@ -27,7 +27,7 @@ namespace API
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
-            
+
             services.AddApplication(_configuration);
             services.AddDomain();
             services.AddPersistence(_configuration);
@@ -41,6 +41,7 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseHsts();
             app.UseCors(options =>
             {
