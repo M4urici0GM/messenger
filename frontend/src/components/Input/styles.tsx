@@ -1,6 +1,5 @@
-import styled, { ThemedStyledInterface } from 'styled-components';
-
-interface InputProps { }
+import styled, { StyledComponent } from 'styled-components';
+import React from 'react';
 
 interface IconProps {
     color?: string
@@ -20,7 +19,7 @@ export const InputContainer = styled.div<InputContainerProps>`
     };
 `;
 
-export const StyledInput = styled.input<InputProps>`
+export const StyledInput: StyledComponent<'input', any, {}, never> = styled.input`
     color: ${props => props.theme.primaryText};
     font-size: 1em;
     border: 0;

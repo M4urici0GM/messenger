@@ -10,19 +10,25 @@ import {
 
 interface InputProps {
     fullWidth?: boolean
-    type?: string
     width?: number
-    placeholder?: string
     label?: string
     icon?: React.ReactNode
     iconColor?: string
     style?: any
-    onBlur?(): void
-    onFocus?(): void
-    onChange?(): void
+    onIconClick?(): void
 }
 
-const Input: React.FC<InputProps> = (props) => {
+const Input: React.FC<InputProps & React.HTMLProps<HTMLInputElement>> = (props) => {
+    const {
+        label,
+        icon,
+        onIconClick,
+        onChange,
+        id,
+        placeholder,
+        type,
+    } = props;
+
     return (
         <InputContainer
             fullWidth={props.fullWidth}
@@ -37,12 +43,13 @@ const Input: React.FC<InputProps> = (props) => {
             }
             <IconContainer>
                 <StyledInput
-                    type={props.type}
-                    onChange={props.onChange}
-                    placeholder={props.placeholder}
+                    onChange={onChange}
+                    id={id}
+                    placeholder={placeholder}
+                    type={type}
                 />               
                 {props.icon && (
-                    <Icon>
+                    <Icon onClick={onIconClick}>
                         {props.icon}
                     </Icon>
                 )}
@@ -59,6 +66,7 @@ Input.defaultProps = {
     onBlur: () => {},
     onFocus: () => {},
     onChange: () => {},
+    onIconClick: () => {},
 };
 
 export default Input;
