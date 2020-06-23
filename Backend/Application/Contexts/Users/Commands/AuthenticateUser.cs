@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Authentication;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Contexts.Authentication.Commands;
 using Application.Contexts.Users.Validators;
 using Application.DataTransferObjects;
 using Application.Interfaces;
+using Application.Interfaces.Configurations;
 using Application.Interfaces.Security;
-using Application.Security.WebToken;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Contexts.Users.Commands
 {
@@ -27,23 +24,21 @@ namespace Application.Contexts.Users.Commands
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public string GrantType { get; set; }
 
         public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, AuthenticatedUserDto>
         {
             private readonly IMainDbContext _mainDbContext;
             private readonly IMapper _mapper;
             private readonly IMediator _mediator;
-            private readonly ITokenConfiguration _tokenConfiguration;
-            private readonly ISignInConfiguration _signInConfiguration;
+            private readonly IEncryptService _encryptService;
 
             public AuthenticateUserHandler(IMainDbContext mainDbContext, IMapper mapper,
-                ITokenConfiguration tokenConfiguration, ISignInConfiguration signInConfiguration,
-                IMediator mediator)
+                IMediator mediator, IEncryptService encryptService)
             {
                 _mainDbContext = mainDbContext;
                 _mapper = mapper;
-                _tokenConfiguration = tokenConfiguration;
-                _signInConfiguration = signInConfiguration;
+                _encryptService = encryptService;
                 _mediator = mediator;
             }
 
@@ -64,12 +59,20 @@ namespace Application.Contexts.Users.Commands
                     throw new InvalidCredentialException();
 
                 string passwordHash = user.Password;
-                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, passwordHash);
+                bool isPasswordValid = await _encryptService.VerifyHash(request.Password, passwordHash);
 
                 if (!isPasswordValid)
                     throw new InvalidCredentialException();
+                
+                var generateTokenRequest = new GenerateToken
+                {
+                    Claims = new List<Claim>()
+                    {
+                        new Claim("UserId", user.Id.ToString("D"))
+                    }
+                };
 
-                WebToken webToken = await _mediator.Send(new GenerateToken(), cancellationToken);
+                WebToken webToken = await _mediator.Send(generateTokenRequest, cancellationToken);
 
                 return new AuthenticatedUserDto
                 {

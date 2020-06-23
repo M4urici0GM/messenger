@@ -1,20 +1,29 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
 using Application.AutoMapper;
+using Application.Configurations;
+using Application.Configurations.WebToken;
+using Application.HealthChecks;
+using Application.Interfaces.Configurations;
 using Application.Interfaces.Security;
 using Application.Middlewares;
-using Application.Security.WebToken;
+using Application.Services.Security;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
 
 namespace Application
 {
@@ -28,11 +37,27 @@ namespace Application
                 options.ReceiveBufferSize = 4096;
                 options.KeepAliveInterval = TimeSpan.FromMinutes(2);
             });
-            ConfigureSecurity(services, configuration);
-            ConfigureAutoMapper(services);
+            
+            services.ConfigureSecurity(configuration);
+            services.ConfigureAutoMapper();
+            services.ConfigureApplicationHealthCheck();
+
+            bool appConfigurationExists = configuration.GetSection(nameof(AppConfiguration)).Exists();
+            if (!appConfigurationExists)
+                throw new InvalidOperationException("Missing App Configuration");
+            
+            AppConfiguration appConfiguration = new AppConfiguration();
+            
+            new ConfigureFromConfigurationOptions<IAppConfiguration>(
+                configuration.GetSection(nameof(AppConfiguration)))
+                .Configure(appConfiguration);
+
+            services.AddSingleton<IAppConfiguration>(appConfiguration);
+            services.AddTransient<IEncryptService, EncryptService>();
+            services.AddHttpContextAccessor();
         }
 
-        private static void ConfigureAutoMapper(IServiceCollection services)
+        private static void ConfigureAutoMapper(this IServiceCollection services)
         {
             MapperConfiguration mapperConfig = new MapperConfiguration(config =>
             {
@@ -42,17 +67,24 @@ namespace Application
             services.AddSingleton(mapper);
         }
         
-        private static void ConfigureSecurity(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureSecurity(this IServiceCollection services, IConfiguration configuration)
         {
             bool configurationExists = configuration.GetSection(nameof(TokenConfiguration)).Exists();
             if (!configurationExists)
                 throw new InvalidOperationException("Missing token configuration");
-            
+
             TokenConfiguration tokenConfiguration = new TokenConfiguration();
+            
             new ConfigureFromConfigurationOptions<ITokenConfiguration>(
                 configuration.GetSection(nameof(TokenConfiguration)))
                 .Configure(tokenConfiguration);
             
+            SignInConfiguration signInConfiguration = new SignInConfiguration(tokenConfiguration);
+            
+            services.AddSingleton(tokenConfiguration);
+            services.AddSingleton<ISignInConfiguration>(signInConfiguration);
+
+
             services.AddSingleton<ITokenConfiguration>(tokenConfiguration);
             services.AddSingleton<ISignInConfiguration, SignInConfiguration>();
             
@@ -62,30 +94,30 @@ namespace Application
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidAudience = tokenConfiguration.Audience,
-                    ValidIssuer = tokenConfiguration.Issuer,
-                    ValidateAudience =  true,
-                    ValidateIssuer = true,
-                    ClockSkew = TimeSpan.Zero,
-                };
-            });
+                
+                var validationParameters = options.TokenValidationParameters;
 
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build());
+                validationParameters.ValidateAudience = true;
+                validationParameters.ValidateIssuer = true;
+                validationParameters.ClockSkew = TimeSpan.Zero;
+
+                validationParameters.ValidAudience = tokenConfiguration.Audience;
+                validationParameters.ValidIssuer = tokenConfiguration.Issuer;
+                validationParameters.RequireExpirationTime = true;
+
+                validationParameters.IssuerSigningKey = signInConfiguration.SecurityKey;
             });
         }
 
         public static void UseApplication(this IApplicationBuilder app)
         {
+            app.StartHealthCheck();
             app.UseWebSockets();
             app.UseMiddleware(typeof(ErrorMiddleware));
             app.UseMiddleware(typeof(WebSocketsMiddleware));
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
     }
 }

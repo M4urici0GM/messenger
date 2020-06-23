@@ -16,6 +16,10 @@ namespace Domain.Entities
         public bool IsVerified { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        
+        /**
+         * Navigation Properties
+         */
         public IEnumerable<UserMessage> SentMessages { get; set; }
         public IEnumerable<UserMessage> ReceivedMessages { get; set; }
     }

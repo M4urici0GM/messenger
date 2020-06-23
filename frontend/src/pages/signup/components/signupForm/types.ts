@@ -1,4 +1,4 @@
-import { InjectedFormikProps } from 'formik';
+import { InjectedFormikProps, FormikBag } from 'formik';
 
 export interface FormProps {
     email: string
@@ -11,5 +11,7 @@ export interface FormProps {
 export interface OwnProps {
     onSignupFormSubmit(values: FormProps): void
 }
+
+export type ComponentFormikBag = FormikBag<OwnProps, FormProps>;
 
 export type ComponentProps = InjectedFormikProps<OwnProps, FormProps>;

@@ -1,9 +1,10 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Interfaces.Security
+namespace Application.Interfaces.Configurations
 {
     public interface ISignInConfiguration
     {
         SigningCredentials SigningCredentials { get; }
+        SecurityKey SecurityKey { get; }
     }
 }

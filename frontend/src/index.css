@@ -33,6 +33,7 @@ body {
   transition: opacity 350ms;
 }
 
+
 .component-transition-appear-done {
   opacity: 1;
 }
@@ -43,8 +44,7 @@ body {
 }
 
 .component-transition-exit-active {
-  opacity: 0;
-  transition: opacity 1000ms;
+  transition: opacity 350ms;
 }
 
 .component-transition-exit-done {

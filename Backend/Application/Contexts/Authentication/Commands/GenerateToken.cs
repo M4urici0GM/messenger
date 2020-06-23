@@ -6,13 +6,11 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
-using Application.Interfaces.Security;
+using Application.Interfaces.Configurations;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace Application.Contexts.Authentication.Commands
 {

@@ -16,6 +16,10 @@ namespace Persistence
                 options.UseSqlServer(configuration.GetConnectionString(nameof(MainDbContext)));
             });
             
+            services
+                .AddHealthChecks()
+                .AddSqlServer(configuration.GetConnectionString(nameof(MainDbContext)), "SELECT @@VERSION;");
+            
             return services;
         }
     }

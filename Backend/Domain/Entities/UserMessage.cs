@@ -7,12 +7,16 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid MessageId { get; set; }
-        public Message Message { get; set; }
         public Guid UserToId { get; set; }
-        public User To { get; set; }
         public Guid UserFromId { get; set; }
-        public User From { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        
+        /**
+         * Navigation Properties
+         */
+        public Message Message { get; set; }
+        public User To { get; set; }
+        public User From { get; set; }
     }
 }

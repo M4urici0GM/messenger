@@ -1,6 +1,7 @@
-﻿using Application.Interfaces.Security;
+﻿
+using Application.Interfaces.Configurations;
 
-namespace Application.Security.WebToken
+namespace Application.Configurations.WebToken
 {
     public class TokenConfiguration : ITokenConfiguration
     {

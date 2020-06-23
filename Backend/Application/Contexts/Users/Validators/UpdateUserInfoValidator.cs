@@ -18,7 +18,7 @@ namespace Application.Contexts.Users.Validators
                 .When(p => !string.IsNullOrEmpty(p.CurrentPassword));;
             RuleFor(p => p.CurrentPassword)
                 .Matches(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,30}$")
-                .WithMessage(@"Current password needed when updating password")
+                .WithMessage(@"Current password is required when updating password")
                 .When(p => !string.IsNullOrEmpty(p.NewPassword));;
         }
     }

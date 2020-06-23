@@ -1,4 +1,4 @@
-﻿namespace Application.Interfaces.Security
+﻿namespace Application.Interfaces.Configurations
 {
     public interface ITokenConfiguration
     {

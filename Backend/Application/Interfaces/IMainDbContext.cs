@@ -12,5 +12,7 @@ namespace Application.Interfaces
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         DbSet<UserMessage> UserMessages { get; set; }
         DbSet<Message> Messages { get; set; }
+        DbSet<VerificationToken> VerificationTokens { get; set; }
+        DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

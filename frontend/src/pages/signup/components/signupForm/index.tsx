@@ -15,6 +15,7 @@ import Input from '../../../../components/Input';
 
 import {
     ComponentProps,
+    ComponentFormikBag,
     FormProps,
     OwnProps,
 } from './types';
@@ -132,7 +133,7 @@ export default withFormik<OwnProps, FormProps>({
         password: '',
         isPasswordShown: false,
     }),
-    handleSubmit: async (values, formikBag) => {
+    handleSubmit: async (values: FormProps, formikBag: ComponentFormikBag): Promise<void> => {
         const {
             firstName,
             lastName,

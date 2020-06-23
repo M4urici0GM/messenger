@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -15,16 +16,16 @@ namespace Persistence.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<UserMessage> UserMessages { get; set; }
         public DbSet<Message> Messages { get; set; }
-        
+        public DbSet<VerificationToken> VerificationTokens { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
+
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new MessageConfiguration());
-            modelBuilder.ApplyConfiguration(new UserMessageConfiguration());
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
-
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
 

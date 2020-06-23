@@ -8,21 +8,26 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserMessage> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasOne(p => p.To)
-                .WithMany()
-                .HasForeignKey(p => p.UserToId)
+            builder.HasKey(x => new { x.Id, x.MessageId, x.UserToId, x.UserFromId });
+
+            builder
+                .HasOne(x => x.Message)
+                .WithMany(x => x.UserMessages)
+                .HasForeignKey(x => x.MessageId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(p => p.From)
-                .WithMany()
-                .HasForeignKey(p => p.UserFromId)
-                .OnDelete(DeleteBehavior.NoAction);;
+            builder
+                .HasOne(x => x.From)
+                .WithMany(x => x.ReceivedMessages)
+                .HasForeignKey(x => x.UserFromId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(p => p.Message)
-                .WithMany()
-                .HasForeignKey(p => p.MessageId)
-                .OnDelete(DeleteBehavior.NoAction);;
+            builder
+                .HasOne(x => x.To)
+                .WithMany(x => x.SentMessages)
+                .HasForeignKey(x => x.UserToId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

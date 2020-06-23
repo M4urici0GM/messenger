@@ -2,9 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
+using Application.Contexts.Users.Notifications;
 using Application.Contexts.Users.Validators;
 using Application.DataTransferObjects;
 using Application.Interfaces;
+using Application.Interfaces.Security;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -28,14 +30,17 @@ namespace Application.Contexts.Users.Commands
             private readonly IMainDbContext _mainDbContext;
             private readonly IMapper _mapper;
             private readonly ILogger<CreateUserHandler> _logger;
+            private readonly IEncryptService _encryptService;
             private readonly IMediator _mediator;
 
-            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ILogger<CreateUserHandler> logger, IMediator mediator)
+            public CreateUserHandler(IMainDbContext mainDbContext, IMapper mapper, ILogger<CreateUserHandler> logger,
+                IEncryptService encryptService, IMediator mediator)
             {
                 _mainDbContext = mainDbContext;
                 _mapper = mapper;
-                _mediator = mediator;
+                _encryptService = encryptService;
                 _logger = logger;
+                _mediator = mediator;
             }
 
             public async Task<UserDto> Handle(CreateUser request, CancellationToken cancellationToken)
@@ -54,12 +59,13 @@ namespace Application.Contexts.Users.Commands
                     throw new EntityAlreadyExists(nameof(User), request.Email);
 
                 User newUser = _mapper.Map<User>(request);
-                newUser.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                newUser.Password = await _encryptService.HashPassword(request.Password);
 
                 await _mainDbContext.Users.AddAsync(newUser, cancellationToken);
                 await _mainDbContext.SaveChangesAsync(cancellationToken);
 
                 _logger.LogDebug($"Created user: {request.Email}");
+                await _mediator.Publish(new UserCreated {User = newUser});
                 return _mapper.Map<UserDto>(newUser);
             }
         }

@@ -24,15 +24,6 @@ namespace Persistence.Configurations
             builder.Property(p => p.IsVerified)
                 .HasDefaultValue(false)
                 .IsRequired();
-
-            builder
-                .HasMany(p => p.ReceivedMessages)
-                .WithOne(p => p.From)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasMany(p => p.SentMessages)
-                .WithOne(p => p.To)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

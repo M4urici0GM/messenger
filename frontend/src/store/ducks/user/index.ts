@@ -1,6 +1,6 @@
-import { Action, Reducer } from 'redux';
+import { Reducer } from 'redux';
 
-import { IUserState, IUserTypes } from './types';
+import { IUserState } from './types';
 
 const INITIAL_STATE: IUserState = {
     error: false,

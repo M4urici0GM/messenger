@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Domain.Interfaces;
 
 namespace Domain.Entities
@@ -13,5 +14,10 @@ namespace Domain.Entities
         public DateTime? SeenDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        
+        /**
+         * Navigation Properties
+         */
+        public List<UserMessage> UserMessages { get; set; }
     }
 }
