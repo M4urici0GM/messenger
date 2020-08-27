@@ -38,10 +38,10 @@ namespace Application.Middlewares
         {
             var webSocket = await httpContext.WebSockets.AcceptWebSocketAsync();
             await _mediator.Publish(new OnWebSocketConnected { WebSocket = webSocket });
-            byte[] buffer = new byte[4096];
+            var buffer = new byte[4096];
             while (webSocket.State == WebSocketState.Open)
             {
-                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 if (result.Count > 0)
                 {
                     await _mediator.Publish(new OnWebSocketMessageReceived
