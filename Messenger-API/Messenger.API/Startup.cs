@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Messenger.Application;
 using Messenger.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,7 @@ namespace Messenger.API
         {
             services.AddControllers();
             services.AddPersistence(_configuration);
+            services.AddApplication();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -36,7 +38,7 @@ namespace Messenger.API
             }
 
             app.UseRouting();
-
+            app.UseApplication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,9 +1,12 @@
-﻿using System.Net.WebSockets;
+﻿using System;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Messenger.Application.EntitiesContext.Websocket.Commands;
+using Messenger.Application.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Messenger.Application.Middlewares
 {
@@ -28,14 +31,37 @@ namespace Messenger.Application.Middlewares
 
         private async Task HandleWebsocketConnection(HttpContext httpContext)
         {
-            var webSocket = await httpContext.WebSockets.AcceptWebSocketAsync();
-            var socketFinishedTcs = new TaskCompletionSource<object>();
+            WebSocket webSocket = await httpContext.WebSockets.AcceptWebSocketAsync();
+            TaskCompletionSource<object> socketFinishedTcs = new TaskCompletionSource<object>();
 
-            await _mediator.Send(new WebsocketConnected
+            Guid? userId = httpContext.User.Identity.GetUserId();
+            //TODO: Refactor this code.
+            if (userId != null)
             {
-                WebSocket = webSocket,
-                TaskCompletionSource = socketFinishedTcs
-            });
+                try
+                {
+                    await _mediator.Send(new WebsocketConnected
+                    {
+                        WebSocket = webSocket,
+                        TaskCompletionSource = socketFinishedTcs,
+                        UserId = userId.Value,
+                    });
+                }
+                catch (Exception ex)
+                {
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, ex.Message,
+                        CancellationToken.None);
+                    socketFinishedTcs.SetResult(false);
+                    return;
+                }
+            }
+            else
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Missing user authentication",
+                    CancellationToken.None);
+                socketFinishedTcs.SetResult(false);
+                return;
+            }
 
             await socketFinishedTcs.Task;
         }
