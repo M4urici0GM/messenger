@@ -31,7 +31,6 @@ namespace Messenger.Application.EntitiesContext.Websocket.Commands
             
             public async Task<Unit> Handle(WebsocketConnected request, CancellationToken cancellationToken)
             {
-
                 User user = await _mainDb.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 
                 if (user == null)
