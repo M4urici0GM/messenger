@@ -19,6 +19,11 @@ namespace Messenger.Application.Services
             _webSockets = new List<WebsocketUser>();
         }
 
+        public WebsocketUser GetWebsocket(WebSocket webSocket)
+        {
+            return _webSockets.FirstOrDefault(x => x.WebSocket == webSocket);
+        }
+        
         public WebsocketUser GetWebsocket(Guid id)
         {
             return _webSockets.FirstOrDefault(x => x.Id == id);
@@ -32,9 +37,10 @@ namespace Messenger.Application.Services
             return _webSockets.FirstOrDefault(x => x.User.Id == user.Id);
         }
 
-        public void AddWebsocket(WebsocketUser websocketUser)
+        public Guid AddWebsocket(WebsocketUser websocketUser)
         {
             _webSockets.Add(websocketUser);
+            return websocketUser.Id;
         }
 
         public async Task SendMessage(byte[] message, Guid webSocketId, CancellationToken cancellationToken)

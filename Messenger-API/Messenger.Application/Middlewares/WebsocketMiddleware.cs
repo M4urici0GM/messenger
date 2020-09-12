@@ -40,7 +40,7 @@ namespace Messenger.Application.Middlewares
             {
                 try
                 {
-                    await _mediator.Send(new WebsocketConnected
+                    await _mediator.Send(new AcceptWebsocketConnection
                     {
                         WebSocket = webSocket,
                         TaskCompletionSource = socketFinishedTcs,

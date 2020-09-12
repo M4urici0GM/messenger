@@ -8,9 +8,10 @@ namespace Messenger.Application.Interfaces
 {
     public interface IWebsocketManager
     {
+        WebsocketUser GetWebsocket(WebSocket webSocket);
         WebsocketUser GetWebsocket(Guid id);
         WebsocketUser GetWebsocket(User user);
-        void AddWebsocket(WebsocketUser websocketUser);
+        Guid AddWebsocket(WebsocketUser websocketUser);
         Task SendMessage(byte[] message, Guid webSocketId, CancellationToken cancellationToken);
         Task SendMessage(byte[] message, Guid webSocketId);
         Task SendMessage(byte[] message, User user);
