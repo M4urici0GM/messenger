@@ -25,9 +25,10 @@ namespace Messenger.API
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddPersistence(_configuration);
             services.AddApplication();
+            services.AddPersistence(_configuration);
+            services.AddControllers()
+                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
