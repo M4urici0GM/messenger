@@ -10,6 +10,7 @@ using Messenger.Domain.Entities;
 using Messenger.Domain.Enums;
 using Messenger.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Messenger.Application.EntitiesContext.Websocket.Commands
 {
@@ -56,8 +57,7 @@ namespace Messenger.Application.EntitiesContext.Websocket.Commands
                         continue;
 
                     string parsedBuffer = Encoding.UTF8.GetString(buffer);
-                    
-
+                    WebsocketMessage receivedMessage = JsonConvert.DeserializeObject<WebsocketMessage>(parsedBuffer);
                     bool messageSent = await _mediator.Send(new AcceptWebsocketMessage(buffer, websocketUser), cancellationToken);
 
                     if (!messageSent)
@@ -66,10 +66,10 @@ namespace Messenger.Application.EntitiesContext.Websocket.Commands
                     WebsocketMessage websocketMessage = new WebsocketMessage
                     {
                         MessageType = WebsocketMessageType.Acknowledge,
-                        
+                        RequestId = receivedMessage.RequestId,
                     };
                     
-                    byte[] message = new byte[4096];
+                    byte[] message = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(websocketMessage));
                     
                     await _websocketManager.SendMessage(message, webSocketId, cancellationToken);
                 }
