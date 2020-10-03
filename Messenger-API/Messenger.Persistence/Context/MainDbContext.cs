@@ -13,6 +13,8 @@ namespace Messenger.Persistence.Context
     {
         
         public DbSet<User> Users { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options)
             :base(options)

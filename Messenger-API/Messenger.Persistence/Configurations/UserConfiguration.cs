@@ -19,6 +19,10 @@ namespace Messenger.Persistence.Configurations
             builder.Property(x => x.IsActive)
                 .HasDefaultValue(true)
                 .IsRequired();
+
+            builder.HasMany(x => x.Chats)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }
