@@ -6,13 +6,8 @@ namespace Messenger.Domain.Entities
 {
     public class WebsocketUser
     {
-        public Guid Id { get; set; }
-        public User User { get; set; }
-        public WebSocket WebSocket { get; set; }
-
-        public WebsocketUser()
-        {
-            Id = Guid.NewGuid();
-        }
+        public string ConnectionId { get; set; }
+        public Guid UserId { get; set; }
+        public string UserIdentifier { get; set; }
     }
 }

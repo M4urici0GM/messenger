@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.WebSockets;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,14 +43,21 @@ namespace Messenger.Application.Middlewares
                     Message = x.ErrorMessage,
                 }));
             }
-        }
-        
-        private Task Response(HttpContext context, HttpStatusCode statusCode, Exception exception)
-        {
-            return Response(context, statusCode, exception, null);
+            catch (InvalidCredentialException ex)
+            {
+                await Response(httpContext, HttpStatusCode.Unauthorized, ex);
+            }
+            catch (EntityAlreadyExistsException ex)
+            {
+                await Response(httpContext, HttpStatusCode.Conflict, ex);
+            }
+            catch (Exception ex)
+            {
+                await Response(httpContext, HttpStatusCode.InternalServerError, ex);
+            }
         }
 
-        private Task Response(HttpContext context, HttpStatusCode statusCode, Exception exception, object response)
+        private Task Response(HttpContext context, HttpStatusCode statusCode, Exception exception, object response = null)
         {
             bool hasRequestId = context.Items.TryGetValue("RequestId", out var requestId);
             Guid? guidRequestId = (hasRequestId)

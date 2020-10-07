@@ -3,8 +3,9 @@
     public enum WebsocketMessageType
     {
         Message,
-        Notification,
         Acknowledge,
         Request,
+        Error,
+        Event,
     }
 }

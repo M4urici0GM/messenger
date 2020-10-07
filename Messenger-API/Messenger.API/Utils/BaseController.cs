@@ -1,7 +1,10 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Linq;
+using System.Net;
 using Messenger.Application.DataTransferObjects;
 using Messenger.Application.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Messenger.API.Utils
 {
@@ -26,6 +29,15 @@ namespace Messenger.API.Utils
             return Ok(apiResponse);
         }
 
+        public IActionResult CreateResponse(IEnumerable response)
+        {
+            HttpStatusCode httpStatusCode = (response.Any())
+                ? HttpStatusCode.OK
+                : HttpStatusCode.NoContent;
+
+            return CreateResponse(httpStatusCode, response);
+        }
+        
         public IActionResult CreateResponse(HttpStatusCode status, object response)
         {
             return CreateResponse(status, null, response);
