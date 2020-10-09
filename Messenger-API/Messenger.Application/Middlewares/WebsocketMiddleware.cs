@@ -3,10 +3,8 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Messenger.Application.EntitiesContext.Websocket.Commands;
 using Messenger.Application.Extensions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Messenger.Application.Middlewares
 {
@@ -40,12 +38,7 @@ namespace Messenger.Application.Middlewares
             {
                 try
                 {
-                    await _mediator.Send(new AcceptWebsocketConnection
-                    {
-                        WebSocket = webSocket,
-                        TaskCompletionSource = socketFinishedTcs,
-                        UserId = userId.Value,
-                    });
+                    
                 }
                 catch (Exception ex)
                 {

@@ -13,6 +13,7 @@ namespace Messenger.Persistence.Context
     {
         
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options)
             :base(options)
@@ -28,14 +29,13 @@ namespace Messenger.Persistence.Context
         {
             ChangeTracker.DetectChanges();
 
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
 
             ChangeTracker.Entries<IEntity>()
                 .Where(x => x.State == EntityState.Added)
                 .ToList()
                 .ForEach(x =>
                 {
-                    x.Property(y => y.Id).CurrentValue = Guid.NewGuid();
                     x.Property(y => y.CreatedAt).CurrentValue = now;
                     x.Property(y => y.UpdatedAt).CurrentValue = now;
                 });

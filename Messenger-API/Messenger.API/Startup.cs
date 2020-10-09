@@ -1,21 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Messenger.Application;
+using Messenger.Application.Hubs;
+using Messenger.Application.Middlewares;
 using Messenger.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace Messenger.API
 {
     public class Startup
     {
-
         private readonly IConfiguration _configuration;
         
         public Startup(IConfiguration configuration)
@@ -25,10 +25,9 @@ namespace Messenger.API
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication();
+            services.AddApplication(_configuration);
             services.AddPersistence(_configuration);
-            services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+            services.UseMongo(_configuration);
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,11 +37,22 @@ namespace Messenger.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
-            app.UseApplication();
-            app.UseEndpoints(endpoints =>
+            app.UseHsts();
+            app.UseCors(options =>
             {
-                endpoints.MapControllers();
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowAnyOrigin();
+            });
+
+            app.UseMiddleware(typeof(ErrorMiddleware));
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(routes =>
+            {
+                routes.MapHub<WebsocketHub>("/ws");
+                routes.MapControllers();
             });
         }
     }

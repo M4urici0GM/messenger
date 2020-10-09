@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Messenger.Application.DataTransferObjects;
+using Messenger.Application.DataTransferObjects.Users;
 using Messenger.Domain.Entities;
 using Messenger.Domain.Exceptions;
 using Messenger.Domain.Interfaces;
+using Messenger.Persistence.Repositories.Interfaces.Users;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace Messenger.Application.EntitiesContext.UserContext.Commands
 {
@@ -21,20 +24,21 @@ namespace Messenger.Application.EntitiesContext.UserContext.Commands
         {
 
             private readonly IMapper _mapper;
-            private readonly IMainDbContext _mainDbContext;
+            private readonly IUserRepository _userRepository;
         
-            public GetUserHandler(IMapper mapper, IMainDbContext mainDbContext)
+            public GetUserHandler(IMapper mapper, IUserRepository userRepository)
             {
                 _mapper = mapper;
-                _mainDbContext = mainDbContext;
+                _userRepository = userRepository;
             }
         
             public async Task<UserDto> Handle(GetUser request, CancellationToken cancellationToken)
             {
-                User user = await _mainDbContext
-                    .Users
-                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-            
+                FilterDefinition<User> filter = Builders<User>.Filter
+                    .Eq(x => x.Id, request.Id);
+
+                User user = await _userRepository.Get(filter, cancellationToken);
+
                 if (user == null)
                     throw new EntityNotFoundException(nameof(User), request.Id);
 

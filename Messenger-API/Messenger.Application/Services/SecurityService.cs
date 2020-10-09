@@ -10,5 +10,10 @@ namespace Messenger.Application.Services
             string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
             return Task.FromResult(hashedPassword);
         }
+
+        public Task<bool> VerifyPassword(string password, string hash)
+        {
+            return Task.FromResult(BCrypt.Net.BCrypt.EnhancedVerify(password, hash));
+        }
     }
 }

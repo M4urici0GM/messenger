@@ -2,6 +2,6 @@
 {
     public struct JwtClaimNames
     {
-        public const string UserId = "UserId";
+        public const string UserId = "uid";
     }
 }

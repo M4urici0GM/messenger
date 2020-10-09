@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Text;
-using Messenger.Domain.Entities;
 
-namespace Messenger.Application.DataTransferObjects
+namespace Messenger.Application.DataTransferObjects.Users
 {
     public class UserDto
     {
